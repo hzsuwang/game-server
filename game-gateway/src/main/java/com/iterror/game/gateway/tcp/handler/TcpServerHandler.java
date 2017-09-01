@@ -1,19 +1,22 @@
-package com.iterror.game.gateway.handler;
+package com.iterror.game.gateway.tcp.handler;
 
-import io.netty.handler.timeout.IdleState;
-import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.iterror.game.common.tcp.connection.MyConnection;
+import com.iterror.game.common.tcp.connection.MyConnectionListener;
+
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 
 /**
  * Created by tony.yan on 2017/8/31.
  */
-public class ServerHandler extends SimpleChannelInboundHandler<String> {
+public class TcpServerHandler extends SimpleChannelInboundHandler<String> {
 
-    private static final Logger logger = LoggerFactory.getLogger(ServerHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(TcpServerHandler.class);
 
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, String msg) throws Exception {
         logger.info("SERVER接收到消息:"+msg);
@@ -21,14 +24,25 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     }
 
     @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
+        logger.info("与服务端断开连接 id="+ctx.channel().id());
+        MyConnectionListener.connectionDestroyed(ctx.channel().id().asLongText());
+    }
+
+    @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         logger.warn("Unexpected exception from downstream.", cause);
-        ctx.close();
+        MyConnectionListener.connectionDestroyed(ctx.channel().id().asLongText());
+
     }
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
         super.channelRegistered(ctx);
+        logger.info("channelRegistered...id=" + ctx.channel().id());
+        MyConnection myConnection = new MyConnection(ctx.channel());
+        MyConnectionListener.connectionCreated(myConnection);
     }
 
     @Override
@@ -42,16 +56,19 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
                 //未进行读操作
                 System.out.println("READER_IDLE");
                 // 超时关闭channel
-                ctx.close();
+                MyConnectionListener.connectionDestroyed(ctx.channel().id().asLongText());
 
             } else if (event.state().equals(IdleState.WRITER_IDLE)) {
-
+                //未进行写操作
+                System.out.println("WRITER_IDLE");
+                // 超时关闭channel
+                MyConnectionListener.connectionDestroyed(ctx.channel().id().asLongText());
 
             } else if (event.state().equals(IdleState.ALL_IDLE)) {
                 //未进行读写
                 System.out.println("ALL_IDLE");
                 // 发送心跳消息
-
+                MyConnectionListener.connectionDestroyed(ctx.channel().id().asLongText());
 
             }
 

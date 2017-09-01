@@ -1,6 +1,6 @@
 package com.iterror.game.gateway;
 
-import com.iterror.game.gateway.handler.ServerHandler;
+import com.iterror.game.gateway.tcp.handler.TcpServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -54,12 +54,12 @@ public class GatewayServer {
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
-                pipeline.addLast("ping", new IdleStateHandler(25, 15, 10, TimeUnit.SECONDS));
+                pipeline.addLast("ping", new IdleStateHandler(60, 30, 90, TimeUnit.SECONDS));
                 pipeline.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
                 pipeline.addLast("frameEncoder", new LengthFieldPrepender(4));
                 pipeline.addLast("decoder", new StringDecoder(CharsetUtil.UTF_8));
                 pipeline.addLast("encoder", new StringEncoder(CharsetUtil.UTF_8));
-                pipeline.addLast(new ServerHandler());
+                pipeline.addLast(new TcpServerHandler());
             }
         });
 
