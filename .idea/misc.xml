@@ -8,6 +8,14 @@
     <option name="pathToConfigFileJava" value="$APPLICATION_HOME_DIR$/codeformat.xml" />
     <option name="selectedJavaProfile" value="alibaba-cn-format" />
   </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/game-gateway/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
   <component name="masterDetails">
     <states>
       <state key="ProjectJDKs.UI">
