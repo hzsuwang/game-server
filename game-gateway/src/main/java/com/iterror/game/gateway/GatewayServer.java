@@ -1,5 +1,6 @@
 package com.iterror.game.gateway;
 
+import com.iterror.game.common.tcp.protocol.DefaultTypeMetainfo;
 import com.iterror.game.gateway.tcp.handler.TcpServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -16,6 +17,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.concurrent.TimeUnit;
 

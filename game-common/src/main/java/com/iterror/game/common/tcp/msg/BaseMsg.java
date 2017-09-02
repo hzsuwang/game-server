@@ -4,6 +4,7 @@ package com.iterror.game.common.tcp.msg;
  * Created by tony.yan on 2017/9/2.
  */
 public abstract class BaseMsg implements java.io.Serializable {
+    public static final String msgCodeKey = "msg_code";
 
     protected long             msgId;                                  // 消息id
     protected String           channelId;                              // 连接通道id

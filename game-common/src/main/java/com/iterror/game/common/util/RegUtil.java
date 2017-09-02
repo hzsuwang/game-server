@@ -1,5 +1,7 @@
 package com.iterror.game.common.util;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +16,7 @@ public class RegUtil {
      */
     public static boolean validPhoneNumber(String phoneNumber) {
 
-        if (StringUtil.isBlank(phoneNumber)) {
+        if (StringUtils.isBlank(phoneNumber)) {
             return false;
         }
 

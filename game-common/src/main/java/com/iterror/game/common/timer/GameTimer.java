@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kantop.qp.common.util.QpDateUtil;
+import com.iterror.game.common.util.DateUtil;
 
 public class GameTimer {
 
@@ -36,7 +36,7 @@ public class GameTimer {
                         Object key = action.getKey();
                         Date startTime = action.getValue();
 
-                        if (QpDateUtil.getTimeIntervalSeconds(startTime, now) > timeOutInteval) {
+                        if (DateUtil.getTimeIntervalSeconds(startTime, now) > timeOutInteval) {
                             if (logger.isDebugEnabled()) {
                                 logger.debug("regionName=[{}],key=[{}] exceed the max inteval=[{}]. ", new Object[] { regionName, key, timeOutInteval });
                             }

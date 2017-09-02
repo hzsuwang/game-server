@@ -12,8 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
-import com.kantop.qp.common.util.constant.Constants.CommonConstants;
-import com.kantop.qp.common.util.constant.Constants.FileConstants;
+import com.iterror.game.common.constant.Constants.FileConstants;
+import com.iterror.game.common.constant.Constants.CommonConstants;
 
 public class UploadUtil {
 

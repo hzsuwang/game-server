@@ -3,6 +3,9 @@
  */
 package com.iterror.game.common.util;
 
+import io.netty.util.internal.StringUtil;
+import org.apache.commons.lang.StringUtils;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -161,7 +164,7 @@ public class ClassUtil {
 	 * @return 直观的类名，或 <code>null</code>
 	 */
 	private static String getClassName(String className, boolean processInnerClass) {
-		if (StringUtil.isEmpty(className)) {
+		if (StringUtils.isEmpty(className)) {
 			return className;
 		}
 
@@ -325,7 +328,7 @@ public class ClassUtil {
 	 * @return 短类名，如果类名为空，则返回 <code>null</code>
 	 */
 	public static String getShortClassName(String className) {
-		if (StringUtil.isEmpty(className)) {
+		if (StringUtils.isEmpty(className)) {
 			return className;
 		}
 
@@ -399,7 +402,7 @@ public class ClassUtil {
 	 * @return package名，如果类名为空，则返回 <code>null</code>
 	 */
 	public static String getPackageName(String className) {
-		if (StringUtil.isEmpty(className)) {
+		if (StringUtils.isEmpty(className)) {
 			return null;
 		}
 
@@ -790,7 +793,7 @@ public class ClassUtil {
 			return false;
 		}
 
-		return StringUtil.contains(clazz.getName(), INNER_CLASS_SEPARATOR_CHAR);
+		return StringUtils.contains(clazz.getName(), INNER_CLASS_SEPARATOR_CHAR);
 	}
 
 	/**

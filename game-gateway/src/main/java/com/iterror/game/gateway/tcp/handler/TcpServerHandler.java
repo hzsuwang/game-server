@@ -3,24 +3,40 @@ package com.iterror.game.gateway.tcp.handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSONObject;
 import com.iterror.game.common.tcp.connection.MyConnection;
 import com.iterror.game.common.tcp.connection.MyConnectionListener;
+import com.iterror.game.common.tcp.msg.BaseMsg;
+import com.iterror.game.common.tcp.protocol.DefaultTypeMetainfo;
+import com.iterror.game.common.util.SjsonUtil;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
-
+import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Created by tony.yan on 2017/8/31.
  */
+
 public class TcpServerHandler extends SimpleChannelInboundHandler<String> {
 
     private static final Logger logger = LoggerFactory.getLogger(TcpServerHandler.class);
 
+    @Autowired
+    private DefaultTypeMetainfo typeMetaInfo;
+
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, String msg) throws Exception {
-        logger.info("SERVER接收到消息:"+msg);
-        channelHandlerContext.channel().writeAndFlush("yes, server is accepted you ,nice !"+msg);
+        logger.info("client req msg=" + msg);
+        int msgCode = SjsonUtil.getMsgCodeFromMsg(msg);
+        Class<?> classObj = typeMetaInfo.find(msgCode);
+        if (classObj == null) {
+            logger.error("msgCode not find     msgCode=" + msgCode);
+        }
+        BaseMsg baseMsg = (BaseMsg) JSONObject.parseObject(msg, classObj);
+        logger.info(baseMsg.toString());
+
+        //channelHandlerContext.channel().writeAndFlush("yes, server is accepted you ,nice !"+msg);
     }
 
     @Override

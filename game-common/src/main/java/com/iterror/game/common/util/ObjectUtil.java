@@ -304,7 +304,7 @@ public class ObjectUtil {
 	 * @return 对象的<code>toString()</code>的返回值，或空字符串<code>""</code>
 	 */
 	public static String toString(Object object) {
-		return (object == null) ? StringUtil.EMPTY_STRING : (object.getClass().isArray() ? ArrayUtil.toString(object) : object.toString());
+		return (object == null) ? "" : (object.getClass().isArray() ? ArrayUtil.toString(object) : object.toString());
 	}
 
 	/**

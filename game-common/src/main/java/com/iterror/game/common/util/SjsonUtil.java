@@ -3,7 +3,7 @@ package com.iterror.game.common.util;
 import org.apache.commons.lang.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.kantop.qp.common.engine.bto.BaseMsg;
+import com.iterror.game.common.tcp.msg.BaseMsg;
 
 /**
  * 获取json串中某个属性

@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import io.netty.util.internal.StringUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 
 public class DateUtil extends DateUtils implements Serializable {
@@ -24,7 +26,7 @@ public class DateUtil extends DateUtils implements Serializable {
     public static SimpleDateFormat formatter1         = new SimpleDateFormat(dateyyyymm);
 
     public static Date formatDate(String dateString, String format) {
-        if (StringUtil.isBlank(format)) {
+        if (StringUtils.isBlank(format)) {
             format = dateyyyymmddhhmmss;
         }
         SimpleDateFormat sformat = new SimpleDateFormat(format);
@@ -37,7 +39,7 @@ public class DateUtil extends DateUtils implements Serializable {
     }
 
     public static String formatDateString(Date date, String format) {
-        if (StringUtil.isBlank(format)) {
+        if (StringUtils.isBlank(format)) {
             format = dateyyyymmddhhmmss;
         }
         SimpleDateFormat sformat = new SimpleDateFormat(format);
@@ -93,7 +95,7 @@ public class DateUtil extends DateUtils implements Serializable {
     }
 
     public static String format(Date date, String format) {
-        if (StringUtil.isBlank(format)) {
+        if (StringUtils.isBlank(format)) {
             format = dateyyyymmddhhmmss;
         }
         SimpleDateFormat sdf = new SimpleDateFormat(format);
@@ -126,7 +128,7 @@ public class DateUtil extends DateUtils implements Serializable {
     /**
      * 计算两个时间的时间差(毫秒)
      * 
-     * @param data1
+     * @param date1
      * @param date2
      * @return
      */
@@ -135,5 +137,9 @@ public class DateUtil extends DateUtils implements Serializable {
             return date2.getTime() - date1.getTime();
         }
         return 0;
+    }
+
+    public static int getTimeIntervalSeconds(Date startTime, Date now) {
+        return (int) (now.getTime() - startTime.getTime() / 1000);
     }
 }

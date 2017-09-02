@@ -24,10 +24,10 @@ import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
+import com.iterror.game.common.constant.Constants.FileConstants;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.kantop.qp.common.util.constant.Constants.FileConstants;
 
 public class FileUtil {
     public static String[] CONTACT_ALLOW_TYPES = { "gif", "jpg", "jpeg", "bmp", "png", "x-png", "x-bmp", "x-ms-bmp" };
@@ -387,7 +387,7 @@ public class FileUtil {
 	}
 	/**
 	 * 判断是否有子目录
-	 * @param folder
+	 * @param file
 	 * @return
 	 */
 	public static boolean hasSonFolder(File file){

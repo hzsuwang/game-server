@@ -1,5 +1,7 @@
 package com.iterror.game.common.util;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,7 +33,7 @@ public class QpDateUtil {
             return "";
         }
 
-        if (StringUtil.isBlank(dateFormat)) {
+        if (StringUtils.isBlank(dateFormat)) {
             return new SimpleDateFormat(DEFAULT_DATE_FORMAT).format(date);
         }
 

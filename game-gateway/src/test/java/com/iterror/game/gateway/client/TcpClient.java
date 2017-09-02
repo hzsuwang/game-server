@@ -1,5 +1,7 @@
 package com.iterror.game.gateway.client;
 
+import com.alibaba.fastjson.JSONObject;
+import com.iterror.game.gateway.tcp.bto.xip.AuthReq;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -83,6 +85,12 @@ public class TcpClient {
             //for (int i = 0; i < 100000; i++) {
              //   TcpClient.sendMsg(i + "你好1");
             //}
+            AuthReq req = new AuthReq();
+            req.setDid("aaaa");
+            req.setSid("bbbb");
+            req.setMsgId(123);
+            JSONObject messageJson = (JSONObject) JSONObject.toJSON(req);
+            TcpClient.sendMsg(messageJson.toJSONString());
             long t1 = System.nanoTime();
             System.out.println((t1 - t0) / 1000000.0);
         } catch (Exception e) {
