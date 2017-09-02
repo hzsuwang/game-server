@@ -19,23 +19,15 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Created by tony.yan on 2017/8/31.
  */
 
-public class TcpServerHandler extends SimpleChannelInboundHandler<String> {
+public class TcpServerHandler extends SimpleChannelInboundHandler<BaseMsg> {
 
     private static final Logger logger = LoggerFactory.getLogger(TcpServerHandler.class);
 
     @Autowired
     private DefaultTypeMetainfo typeMetaInfo;
 
-    protected void channelRead0(ChannelHandlerContext channelHandlerContext, String msg) throws Exception {
-        logger.info("client req msg=" + msg);
-        int msgCode = SjsonUtil.getMsgCodeFromMsg(msg);
-        Class<?> classObj = typeMetaInfo.find(msgCode);
-        if (classObj == null) {
-            logger.error("msgCode not find     msgCode=" + msgCode);
-        }
-        BaseMsg baseMsg = (BaseMsg) JSONObject.parseObject(msg, classObj);
-        logger.info(baseMsg.toString());
-
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, BaseMsg baseMsg) throws Exception {
+        logger.info("client req msg=" + baseMsg);
         //channelHandlerContext.channel().writeAndFlush("yes, server is accepted you ,nice !"+msg);
     }
 
