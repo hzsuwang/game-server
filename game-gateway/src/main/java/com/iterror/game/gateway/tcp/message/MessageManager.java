@@ -16,10 +16,14 @@ import org.slf4j.LoggerFactory;
 
 import com.iterror.game.common.tcp.msg.BaseMsg;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
 
 /**
  * 消息管理 Created by tony.yan on 2017/9/1.
  */
+@Service("messageManager")
 public class MessageManager {
 
     private static final Logger                 logger    = LoggerFactory.getLogger(MessageManager.class);
@@ -32,9 +36,10 @@ public class MessageManager {
     private static ExecutorService              pool;
 
     @Autowired
-    private static MessageClosureRegistry       messageClosureRegistry;
+    private MessageClosureRegistry              messageClosureRegistry;
 
-    public static void start() {
+    @PostConstruct
+    public void start() {
         ThreadFactory factory = new ThreadFactory() {
 
             public Thread newThread(Runnable r) {
@@ -50,7 +55,7 @@ public class MessageManager {
         }
     }
 
-    public static void addReceivedMessage(BaseMsg message) {
+    public void addReceivedMessage(BaseMsg message) {
         if (message != null) {
             try {
                 boolean success = linkQueue.offer(message, 5, TimeUnit.SECONDS);
@@ -64,7 +69,7 @@ public class MessageManager {
         return;
     }
 
-    public static BaseMsg waitForProcessMessage() {
+    private BaseMsg waitForProcessMessage() {
         BaseMsg message = null;
         while (message == null) {
             try {
@@ -76,7 +81,7 @@ public class MessageManager {
         return message;
     }
 
-    private static class GatewayThread implements Runnable {
+    private class GatewayThread implements Runnable {
 
         @SuppressWarnings({ "unchecked", "rawtypes" })
         public void run() {

@@ -9,11 +9,9 @@ import com.iterror.game.gateway.tcp.bto.xip.AuthReq;
 @Service("authCourse")
 public class AuthCourse extends BaseCourse implements MessageCourse<AuthReq> {
 
-
     @Override
     public void execute(AuthReq req) {
-
+        logger.info("AuthCourse req=" + req);
     }
-
 
 }

@@ -18,11 +18,21 @@ public class MyConnection {
     private Channel             channel;                                                 // 通道
     private boolean             isReplaced = false;                                      // 是否是其它地址上线，导致该连接被踢下的。是的话，不要向事件服务器发送下线消息
 
+
+    private long uid;
     private String              name;
     private boolean             closed;
 
     public MyConnection(final Channel channel){
         this.channel = channel;
+    }
+
+    public long getUid() {
+        return uid;
+    }
+
+    public void setUid(long uid) {
+        this.uid = uid;
     }
 
     public synchronized void close() {

@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+       "
        default-autowire="byName">
-    <context:component-scan base-package="com.iterror.game.gateway.biz.course"/>
+    <context:component-scan base-package="com.iterror.game.gateway.biz.course,com.iterror.game.gateway.tcp.handler,com.iterror.game.gateway,com.iterror.game.gateway.tcp.message"/>
 
     <!-- 注入spring boot无法扫描到的bean. -->
     <bean id="typeMetaInfo"
@@ -16,6 +23,29 @@
         </constructor-arg>
     </bean>
 
+    <bean id="gameDecoder" class="com.iterror.game.common.tcp.protocol.GameDecoder">
+        <constructor-arg index="0" value="2147483647"/>
+        <constructor-arg index="1" value="0"/>
+        <constructor-arg index="2" value="4"/>
+        <constructor-arg index="3" value="0"/>
+        <constructor-arg index="4" value="4"/>
+        <constructor-arg index="5" ref="typeMetaInfo"/>
+    </bean>
+
+    <bean id="gameEncoder" class="com.iterror.game.common.tcp.protocol.GameEncoder" >
+        <constructor-arg index="0" value="4"/>
+    </bean>
+
+    <bean id="netConfig" class="com.iterror.game.common.tcp.connection.NetConfig">
+        <property name="port" value="9000" />
+    </bean>
+
+    <bean id="heartbeatHandler" class="com.iterror.game.common.tcp.protocol.HeartbeatHandler">
+        <constructor-arg index="0" value="30"/>
+        <constructor-arg index="1" value="60"/>
+        <constructor-arg index="2" value="120"/>
+    </bean>
+
     <bean id="messageClosureRegistry" class="com.iterror.game.common.tcp.closure.MessageClosureRegistry">
         <property name="handlers">
             <list>
@@ -25,4 +55,6 @@
             </list>
         </property>
     </bean>
+    <bean id="gatewayServer" class="com.iterror.game.gateway.GatewayServer"/>
+   <!-- <bean id="messageManager" class="com.iterror.game.gateway.tcp.message.MessageManager" init-method="start"/> -->
 </beans>

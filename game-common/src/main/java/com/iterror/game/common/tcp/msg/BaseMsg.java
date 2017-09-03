@@ -1,15 +1,18 @@
 package com.iterror.game.common.tcp.msg;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
+import com.iterror.game.common.tcp.protocol.SignalCode;
+
 /**
  * Created by tony.yan on 2017/9/2.
  */
 public abstract class BaseMsg implements java.io.Serializable {
-    public static final String msgCodeKey = "msg_code";
+    public static final String msgCodeKey = "msgCode";
 
     protected long             msgId;                                  // 消息id
     protected String           channelId;                              // 连接通道id
     protected long             msgUid;                                 // 用户id
-    protected int              retryCount;                             // 重试次数
 
 
     public long getMsgUid() {
@@ -20,17 +23,7 @@ public abstract class BaseMsg implements java.io.Serializable {
         this.msgUid = msgUid;
     }
 
-    public int getRetryCount() {
-        return retryCount;
-    }
 
-    public void setRetryCount(int retryCount) {
-        this.retryCount = retryCount;
-    }
-
-    public int incRetryCount() {
-        return retryCount++;
-    }
 
     public String getChannelId() {
         return channelId;
@@ -47,5 +40,14 @@ public abstract class BaseMsg implements java.io.Serializable {
     public void setMsgId(long msgId) {
         this.msgId = msgId;
     }
-    public abstract int getMsgCode();
+
+    public int getMsgCode(){
+        SignalCode attr = this.getClass().getAnnotation(SignalCode.class);
+        return attr.messageCode();
+    }
+
+    @Override
+    public String  toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
 }

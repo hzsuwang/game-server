@@ -1,5 +1,6 @@
 package com.iterror.game.gateway.tcp.handler;
 
+import com.iterror.game.gateway.tcp.message.MessageManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,20 +16,23 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 /**
  * Created by tony.yan on 2017/8/31.
  */
-
+@Service("tcpServerHandler")
 public class TcpServerHandler extends SimpleChannelInboundHandler<BaseMsg> {
 
     private static final Logger logger = LoggerFactory.getLogger(TcpServerHandler.class);
 
     @Autowired
-    private DefaultTypeMetainfo typeMetaInfo;
+    private MessageManager messageManager;
 
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, BaseMsg baseMsg) throws Exception {
         logger.info("client req msg=" + baseMsg);
         //channelHandlerContext.channel().writeAndFlush("yes, server is accepted you ,nice !"+msg);
+        messageManager.addReceivedMessage(baseMsg);
     }
 
     @Override

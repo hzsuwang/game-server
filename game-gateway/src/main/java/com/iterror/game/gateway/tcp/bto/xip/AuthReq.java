@@ -43,10 +43,4 @@ public class AuthReq extends BaseReqMsg {
     public void setDid(String did) {
         this.did = did;
     }
-    
-    @Override
-    public int getMsgCode() {
-        SignalCode attr = this.getClass().getAnnotation(SignalCode.class);
-        return attr.messageCode();
-    }
 }

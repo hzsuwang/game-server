@@ -28,7 +28,7 @@ public class TcpClient {
         System.setProperty("io.netty.noUnsafe","true");
     }
     public static String        HOST      = "127.0.0.1";
-    public static int           PORT      = 9999;
+    public static int           PORT      = 9000;
 
 
     public static Bootstrap     bootstrap = getBootstrap();

@@ -1,6 +1,10 @@
 package com.iterror.game.gateway;
 
+import com.iterror.game.common.tcp.connection.NetConfig;
 import com.iterror.game.common.tcp.protocol.DefaultTypeMetainfo;
+import com.iterror.game.common.tcp.protocol.GameDecoder;
+import com.iterror.game.common.tcp.protocol.GameEncoder;
+import com.iterror.game.common.tcp.protocol.HeartbeatHandler;
 import com.iterror.game.gateway.tcp.handler.TcpServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -18,7 +22,12 @@ import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,27 +36,27 @@ import java.util.concurrent.TimeUnit;
 public class GatewayServer {
 
     private static final Logger         logger        = LoggerFactory.getLogger(GatewayServer.class);
-    private static final String         IP            = "127.0.0.1";
-    private static final int            PORT          = 9999;
 
-    /** 用于分配处理业务线程的线程组个数 */
-    protected static final int          BIZGROUPSIZE  = Runtime.getRuntime().availableProcessors() * 2; // 默认
+    @Autowired
+    private TcpServerHandler            tcpServerHandler;
 
-    /** 业务出现线程大小 */
-    protected static final int          BIZTHREADSIZE = 4;
-    /*
-     * NioEventLoopGroup实际上就是个线程池, NioEventLoopGroup在后台启动了n个NioEventLoop来处理Channel事件, 每一个NioEventLoop负责处理m个Channel,
-     * NioEventLoopGroup从NioEventLoop数组里挨个取出NioEventLoop来处理Channel
-     */
-    private static final EventLoopGroup bossGroup     = new NioEventLoopGroup(BIZGROUPSIZE);
-    private static final EventLoopGroup workerGroup   = new NioEventLoopGroup(BIZTHREADSIZE);
+    @Autowired
+    private GameDecoder                 gameDecoder;
 
-    protected static void shutdown() {
-        workerGroup.shutdownGracefully();
-        bossGroup.shutdownGracefully();
-    }
+    @Autowired
+    private GameEncoder gameEncoder;
 
-    protected static void start(){
+    @Autowired
+    private HeartbeatHandler            heartbeatHandler;
+
+    @Autowired
+    private NetConfig netConfig;
+
+    protected void start() {
+
+        EventLoopGroup bossGroup     = new NioEventLoopGroup(netConfig.getBossGroupSize());
+        EventLoopGroup workerGroup   = new NioEventLoopGroup(netConfig.getWorkerGroupSize());
+
         ServerBootstrap b = new ServerBootstrap();
         b.group(bossGroup, workerGroup);
         b.channel(NioServerSocketChannel.class);
@@ -56,17 +65,17 @@ public class GatewayServer {
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
-                pipeline.addLast("ping", new IdleStateHandler(60, 30, 90, TimeUnit.SECONDS));
-                pipeline.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
-                pipeline.addLast("frameEncoder", new LengthFieldPrepender(4));
+                pipeline.addLast("ping", heartbeatHandler);
+                pipeline.addLast("frameDecoder", gameDecoder);
+                pipeline.addLast("frameEncoder", gameEncoder);
                 pipeline.addLast("decoder", new StringDecoder(CharsetUtil.UTF_8));
                 pipeline.addLast("encoder", new StringEncoder(CharsetUtil.UTF_8));
-                pipeline.addLast(new TcpServerHandler());
+                pipeline.addLast(tcpServerHandler);
             }
         });
 
         try {
-            b.bind(IP, PORT).sync();
+            b.bind(netConfig.getIp(), netConfig.getPort()).sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
