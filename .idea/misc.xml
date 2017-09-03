@@ -13,6 +13,7 @@
       <list>
         <option value="$PROJECT_DIR$/game-gateway/pom.xml" />
         <option value="$PROJECT_DIR$/game-common/pom.xml" />
+        <option value="$PROJECT_DIR$/game-eureka-server/pom.xml" />
       </list>
     </option>
   </component>

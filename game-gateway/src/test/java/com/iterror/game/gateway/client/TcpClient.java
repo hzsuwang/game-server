@@ -90,6 +90,9 @@ public class TcpClient {
             req.setSid("bbbb");
             req.setMsgId(123);
             JSONObject messageJson = (JSONObject) JSONObject.toJSON(req);
+
+            String url = ZkServer.getServerPath();
+            logger.info("node url="+url);
             TcpClient.sendMsg(messageJson.toJSONString());
             long t1 = System.nanoTime();
             System.out.println((t1 - t0) / 1000000.0);

@@ -1,15 +1,12 @@
 package com.iterror.game.gateway.tcp.handler;
 
-import com.iterror.game.gateway.tcp.message.MessageManager;
+import com.iterror.game.common.tcp.message.MessageManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alibaba.fastjson.JSONObject;
 import com.iterror.game.common.tcp.connection.MyConnection;
 import com.iterror.game.common.tcp.connection.MyConnectionListener;
 import com.iterror.game.common.tcp.msg.BaseMsg;
-import com.iterror.game.common.tcp.protocol.DefaultTypeMetainfo;
-import com.iterror.game.common.util.SjsonUtil;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

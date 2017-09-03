@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/game-common/game-common.iml" filepath="$PROJECT_DIR$/game-common/game-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/game-eureka-server/game-eureka-server.iml" filepath="$PROJECT_DIR$/game-eureka-server/game-eureka-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/game-gateway/game-gateway.iml" filepath="$PROJECT_DIR$/game-gateway/game-gateway.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/game-server.iml" filepath="$PROJECT_DIR$/.idea/game-server.iml" />
     </modules>

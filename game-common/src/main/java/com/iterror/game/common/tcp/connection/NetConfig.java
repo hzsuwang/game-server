@@ -14,6 +14,19 @@ public class NetConfig {
      */
     private int    workerGroupSize = 10;
 
+
+    private String registryAddress=ip+":"+port;
+
+
+    public String getRegistryAddress() {
+        return registryAddress;
+    }
+
+    public void setRegistryAddress(String registryAddress) {
+        this.registryAddress = registryAddress;
+    }
+
+
     public int getBossGroupSize() {
         return bossGroupSize;
     }

@@ -1,11 +1,17 @@
 package com.iterror.game.gateway;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.iterror.game.common.tcp.connection.NetConfig;
-import com.iterror.game.common.tcp.protocol.DefaultTypeMetainfo;
 import com.iterror.game.common.tcp.protocol.GameDecoder;
 import com.iterror.game.common.tcp.protocol.GameEncoder;
 import com.iterror.game.common.tcp.protocol.HeartbeatHandler;
+import com.iterror.game.common.zookeeper.ServerRegistry;
+import com.iterror.game.common.zookeeper.ZkConfig;
 import com.iterror.game.gateway.tcp.handler.TcpServerHandler;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -13,22 +19,9 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
-import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.CharsetUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by tony.yan on 2017/8/31.
@@ -80,5 +73,17 @@ public class GatewayServer {
             e.printStackTrace();
         }
         logger.info("TCP服务器已启动");
+        String zkUrl = "127.0.0.1:2181";
+        ZkConfig zkConfig = new ZkConfig();
+        zkConfig.setAddress(netConfig.getIp()+":"+netConfig.getPort());
+        zkConfig.setGroupNode("game");
+        zkConfig.setSubNode("game-gateway");
+        zkConfig.setZkSessionTimeout(20000);
+        zkConfig.setZkurl(zkUrl);
+        new ServerRegistry(zkConfig);
+
+        //ZkClient4Server.provideServer("game","game-gateway",zkUrl,netConfig.getIp()+":"+netConfig.getPort());
+  //      ServiceRegistry zsr = new ServiceRegistry("127.0.0.1:2181");
+  //      zsr.register(netConfig.getRegistryAddress());
     }
 }

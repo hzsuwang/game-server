@@ -10,7 +10,7 @@
         http://www.springframework.org/schema/context/spring-context.xsd
        "
        default-autowire="byName">
-    <context:component-scan base-package="com.iterror.game.gateway.biz.course,com.iterror.game.gateway.tcp.handler,com.iterror.game.gateway,com.iterror.game.gateway.tcp.message"/>
+    <context:component-scan base-package="com.iterror.game.common.tcp.message,com.iterror.game.gateway.biz.course,com.iterror.game.gateway.tcp.handler,com.iterror.game.gateway,com.iterror.game.gateway.tcp.message"/>
 
     <!-- 注入spring boot无法扫描到的bean. -->
     <bean id="typeMetaInfo"
