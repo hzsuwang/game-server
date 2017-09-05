@@ -1,51 +1,67 @@
 package com.iterror.game.gateway.client;
 
-import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.CuratorFrameworkFactory;
-import org.apache.curator.retry.RetryNTimes;
-
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+
+import org.apache.zookeeper.WatchedEvent;
+import org.apache.zookeeper.Watcher;
+import org.apache.zookeeper.ZooKeeper;
+import org.apache.zookeeper.data.Stat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.iterror.game.common.util.RandomUtil;
+import com.iterror.game.common.zookeeper.ZkConfig;
 
 /**
  * Created by tony.yan on 2017/9/3.
  */
 public class ZkServer {
+    private Stat stat = new Stat();
+    private static final Logger logger    = LoggerFactory.getLogger(ZkServer.class);
+    private ZkConfig zkConfig;
+    ZooKeeper zk = null;
 
-    private static final String SERVER_PATH = "game";
-
-    private static CuratorFramework createCurator(String connectionURL) {
-
-        return CuratorFrameworkFactory.builder().connectString(connectionURL).namespace(SERVER_PATH).connectionTimeoutMs(50000).retryPolicy(new RetryNTimes(Integer.MAX_VALUE,
-                                                                                                                                                            20000)).sessionTimeoutMs(50000).build();
-
+    public ZkServer(ZkConfig zkConfig){
+        this.zkConfig = zkConfig;
+        register();
+    }
+    // 注册到zk中，其中data为服务端的 ip:port
+    public void register() {
+        if (zkConfig != null) {
+            connectServer();
+        }
     }
 
-    public static String getServerPath() {
-        Random random = new Random();
-        List<String> list = null;
-        CuratorFramework framework = createCurator("127.0.0.1:2181");
+    private ZooKeeper connectServer() {
         try {
+            zk = new ZooKeeper(zkConfig.getZkurl(), zkConfig.getZkSessionTimeout(), new Watcher() {
+                public void process(WatchedEvent event) {
 
-            framework.start();
-
-            list = framework.getChildren().forPath("/game-gateway");
-
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            framework.close();
         }
+        return zk;
+    }
 
-        System.out.println("chect list " + list.get(0));
-        if (list != null && !list.isEmpty()) {
-            int number = random.nextInt(100000000);
-
-            int n = number % list.size();
-
-            return list.get(n);
-        } else {
-            return "";
+    public String getRandomNode() {
+        try {
+            List<String> serverList = new ArrayList<>();
+            List<String> nodeList = zk.getChildren("/" + zkConfig.getGroupNode() + "/" + zkConfig.getSubNode(), false);
+            for (String str : nodeList) {
+                System.out.println(str);
+                byte[] datas = zk.getData("/" + zkConfig.getGroupNode() + "/" + zkConfig.getSubNode() + "/" + str, false, stat);
+                String server = new String(datas, "utf-8");
+                serverList.add(server);
+            }
+            if (serverList.size() > 0) {
+                return serverList.get(RandomUtil.getRandomNum(serverList.size()));
+            }
+        } catch (Exception ex) {
+            logger.error("getRandomNode error", ex);
         }
+        return null;
     }
 }

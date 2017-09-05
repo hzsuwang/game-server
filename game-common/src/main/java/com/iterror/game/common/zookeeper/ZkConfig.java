@@ -5,12 +5,20 @@ package com.iterror.game.common.zookeeper;
  */
 public class ZkConfig {
 
-    private String zkurl;
-    private String groupNode = "";
-    private String subNode   = "";
-    private String address   = "";
+    private String member           = "member";
+    private String zkurl            = "127.0.0.1:2181";
+    private String groupNode        = "";
+    private String subNode          = "";
+    private String address          = "";
+    private int    zkSessionTimeout = 2000;
 
-    private int zkSessionTimeout = 2000;
+    public String getMember() {
+        return member;
+    }
+
+    public void setMember(String member) {
+        this.member = member;
+    }
 
     public int getZkSessionTimeout() {
         return zkSessionTimeout;

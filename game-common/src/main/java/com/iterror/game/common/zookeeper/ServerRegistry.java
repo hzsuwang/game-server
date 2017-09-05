@@ -64,8 +64,7 @@ public class ServerRegistry {
             if (!isExists(zk, "/" + zkConfig.getGroupNode() + "/" + zkConfig.getSubNode())) {
                 createZNode(zk, "/" + zkConfig.getGroupNode() + "/" + zkConfig.getSubNode(), zkConfig.getSubNode());
             }
-            String path = zk.create("/" + zkConfig.getGroupNode() + "/" + zkConfig.getSubNode(), bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
-            System.out.println("create zookeeper node path:" + path + " data:" + zkConfig.getAddress());
+            String path = zk.create("/" + zkConfig.getGroupNode() + "/" + zkConfig.getSubNode()+"/"+zkConfig.getMember(), bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
         } catch (Exception e) {
             e.printStackTrace();
         }

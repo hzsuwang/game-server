@@ -1,6 +1,7 @@
 package com.iterror.game.gateway.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.iterror.game.common.zookeeper.ZkConfig;
 import com.iterror.game.gateway.tcp.bto.xip.AuthReq;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -90,8 +91,15 @@ public class TcpClient {
             req.setSid("bbbb");
             req.setMsgId(123);
             JSONObject messageJson = (JSONObject) JSONObject.toJSON(req);
-
-            String url = ZkServer.getServerPath();
+            String zkUrl = "127.0.0.1:2181";
+            ZkConfig zkConfig = new ZkConfig();
+            zkConfig.setAddress(HOST+":"+PORT);
+            zkConfig.setGroupNode("game");
+            zkConfig.setSubNode("game-gateway");
+            zkConfig.setZkSessionTimeout(20000);
+            zkConfig.setZkurl(zkUrl);
+            ZkServer zkServer = new ZkServer(zkConfig);
+            String url = zkServer.getRandomNode();
             logger.info("node url="+url);
             TcpClient.sendMsg(messageJson.toJSONString());
             long t1 = System.nanoTime();
