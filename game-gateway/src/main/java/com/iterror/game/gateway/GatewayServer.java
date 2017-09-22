@@ -45,6 +45,9 @@ public class GatewayServer {
     @Autowired
     private NetConfig netConfig;
 
+    @Autowired
+    private ZkConfig zkConfig;
+
     protected void start() {
 
         EventLoopGroup bossGroup     = new NioEventLoopGroup(netConfig.getBossGroupSize());
@@ -73,17 +76,6 @@ public class GatewayServer {
             e.printStackTrace();
         }
         logger.info("TCP服务器已启动");
-        String zkUrl = "127.0.0.1:2181";
-        ZkConfig zkConfig = new ZkConfig();
-        zkConfig.setAddress(netConfig.getIp()+":"+netConfig.getPort());
-        zkConfig.setGroupNode("game");
-        zkConfig.setSubNode("game-gateway");
-        zkConfig.setZkSessionTimeout(20000);
-        zkConfig.setZkurl(zkUrl);
         new ServerRegistry(zkConfig);
-
-        //ZkClient4Server.provideServer("game","game-gateway",zkUrl,netConfig.getIp()+":"+netConfig.getPort());
-  //      ServiceRegistry zsr = new ServiceRegistry("127.0.0.1:2181");
-  //      zsr.register(netConfig.getRegistryAddress());
     }
 }

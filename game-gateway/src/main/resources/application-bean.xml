@@ -56,5 +56,13 @@
         </property>
     </bean>
     <bean id="gatewayServer" class="com.iterror.game.gateway.GatewayServer"/>
+    <bean id="zkConfig" class="com.iterror.game.common.zookeeper.ZkConfig">
+        <property name="member" value="member" />
+        <property name="zkurl" value="" />
+        <property name="groupNode" value="" />
+        <property name="subNode" value="" />
+        <property name="address" value="" />
+        <property name="zkSessionTimeout" value="" />
+    </bean>
    <!-- <bean id="messageManager" class="com.iterror.game.gateway.tcp.message.MessageManager" init-method="start"/> -->
 </beans>
